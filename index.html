@@ -106,6 +106,8 @@
 
     <h1>Vodka Simulator</h1>
 
+    <h1>Le clicker game le moins jouable du monde</h1>
+
     <h2>Zone 1</h2>
 
     <div id="game-container text-center">
@@ -250,6 +252,7 @@ function loadGame() {
         updatedeuxLevel();
         updatetroisLevel();
         updatequatreLevel();
+        checkAllBonusesPurchased();
 
         verifydeuxLevel();
         verifytroisLevel();
@@ -419,8 +422,8 @@ function checkAllBonusesPurchased() {
                     dollarCount -= unCost;
                     unCount++;
                     unLevel++;
-                    unRate *= 1; // Modifier ici pour ajuster le multiplicateur
-                    unCost = Math.ceil(unCost * 1.3);
+                    unRate += 1; // Modifier ici pour ajuster le multiplicateur
+                    unCost = Math.ceil(unCost * 30);
                     updateunCost();
                     updatedollarCount();
                     updatedollarRate();
@@ -436,8 +439,8 @@ function checkAllBonusesPurchased() {
                     dollarCount -= deuxCost;
                     deuxCount++;
                     deuxLevel++;
-                    deuxRate *= 1.10; // Modifier ici pour ajuster le multiplicateur
-                    deuxCost = Math.ceil(deuxCost + 1.3);
+                    deuxRate += 1; // Modifier ici pour ajuster le multiplicateur
+                    deuxCost = Math.ceil(deuxCost * 30);
                     updatedeuxCost();
                     updatedollarCount();
                     updatedollarRate();
@@ -454,8 +457,8 @@ function checkAllBonusesPurchased() {
                     dollarCount -= troisCost;
                     troisCount++;
                     troisLevel++;
-                    troisRate *= 1.11; // Modifier ici pour ajuster le multiplicateur
-                    troisCost = Math.ceil(troisCost + 1.3);
+                    troisRate += 1; // Modifier ici pour ajuster le multiplicateur
+                    troisCost = Math.ceil(troisCost * 30);
                     updatetroisCost();
                     updatedollarCount();
                     updatedollarRate();
@@ -471,8 +474,8 @@ function checkAllBonusesPurchased() {
                     dollarCount -= quatreCost;
                     quatreCount++;
                     quatreLevel++;
-                    quatreRate *= 1.12; // Modifier ici pour ajuster le multiplicateur
-                    quatreCost = Math.ceil(quatreCost + 1.3);
+                    quatreRate += 1; // Modifier ici pour ajuster le multiplicateur
+                    quatreCost = Math.ceil(quatreCost * 30);
                     updatequatreCost();
                     updatedollarCount();
                     updatedollarRate();

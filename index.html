@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vodka Simulator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+
+    <style>
+        body {
+            text-align: center;
+            padding: 50px;
+            font-family: 'Arial', sans-serif;
+            background-color: #C48A47;
+        }
+
+        #game-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #cookieButton {
+            font-size: 20px;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        #cookieButton img {
+            width: 220px;
+            /* Ajustez la taille de l'image selon vos besoins */
+        }
+
+        #bonus-container {
+            flex-grow: 1;
+            margin-right: 20px;
+            text-align: left;
+        }
+
+        .bonus-button {
+            font-size: 16px;
+            padding: 5px 10px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        #bonus-info {
+            margin-top: 20px;
+        }
+
+        #bonus-info table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        #bonus-info th,
+        #bonus-info td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+
+            /* Styles for small screens (e.g., smartphones) */
+            .container {
+                padding: 0;
+            }
+
+            .col-md-8 {
+                max-width: 100%;
+            }
+
+            .col-lg-4 {
+                max-width: 100%;
+            }
+
+            .modal-xl {
+                max-width: 100%;
+            }
+
+            .modal-content {
+                margin: 0;
+                max-width: 100%;
+                width: 100%;
+            }
+        }
+        
+    </style>
+</head>
+
+<body>
+    <div>
+        <button onclick="loadGame()">Chargé la partie</button>
+        <br>
+        <button onclick="saveGame()">Sauvegarder la partie</button>
+    </div>
+
+    <h1>Vodka Simulator</h1>
+
+    <h2>Zone 1</h2>
+
+    <div id="game-container text-center">
+        <div id="bonus-container">
+            
+        </div>
+        <div>
+            <p id="dollarCount">Argent: 0$</p>
+            <p id="dollarRate">Debit: 0 $/s</p>
+            <button id="cookieButton" onclick="addCookie()"><img src="vodka.webp" alt="Bouteille"></button>
+            <br>
+            <a style="background-color: transparent;
+            border-color: white;" href="#" data-bs-toggle="modal" data-bs-target="#report-modal"
+                class="btn btn-primary mb-2">Bonus et Améliorations</a>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="report-modal" tabindex="-1" role="dialog" aria-labelledby="report-modal-label"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-light">
+                <div class="modal-header">
+                    <h5 class="modal-title">Bonus et Améliorations</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-light text-center">
+
+                    <h2>Informations sur les bonus</h2>
+                    <table class="table text-light">
+                        <thead>
+                            <th>25 cl</th>
+                            <th>50 cl</th>
+                            <th>75 cl</th>
+                            <th>1 l</th>
+                        </thead>
+                        <tbody>
+                            <td id="unCount">0</td>
+                            <td id="deuxCount">0</td>
+                            <td id="troisCount">0</td>
+                            <td id="quatreCount">0</td>
+                        </tbody>
+                    </table>
+                    <h3>Toutes les bouteilles :</h3>
+            <button class="btn btn-secondary bonus-button" onclick="buy25()"><h3>Acheter une bouteille de 25 cl: (level:
+                <span id="unLevel">1</span>) (coûte <span id="unCost">100</span> $)</h3></button>
+                <h1>Niveau 10 requis</h1>
+                <h1><i class="bi bi-arrow-down bi-2x"></i></h1>
+            <button class="btn btn-secondary bonus-button" id="buy50btn" onclick="buy50()"><h3>Acheter une bouteille de 50
+                cl (level: <span id="deuxLevel">1</span>) (coûte <span id="deuxCost">500</span> $)</h3></button>
+                <h1>Niveau 10 requis</h1>
+                <h1><i class="bi bi-arrow-down bi-2x"></i></h1>
+            <button class="btn btn-secondary bonus-button" id="buy75btn" onclick="buy75()"><h3>Acheter une bouteille de 75 cl (level:
+                <span id="troisLevel">1</span>) (coûte <span id="troisCost">200k</span> $)</button>
+                <h1>Niveau 10 requis</h1>
+                <h1><i class="bi bi-arrow-down bi-2x"></i></h1>
+            <button class="btn btn-secondary bonus-button" id="buy100btn" onclick="buy100()"><h3>Acheter une bouteille de 1 l (level: <span
+                    id="quatreLevel">1</span>) (coûte <span id="quatreCost">500k</span> $)</h3></button>
+                    <h1 class="text-success border">Prochaine zone</h1>
+                    <h2>Achetez tous les bonus pour y acceder</h2>
+                    <h1><i class="bi bi-arrow-down bi-2x"></i></h1>
+            <button class="btn btn-success" onclick="checkAllBonusesPurchased()" id="zonedeux"><h1>Zone 2</h1></a></button>
+                </div>
+            </div>
+        </div>
+
+
+        <script>
+
+
+
+            // Fonction pour sauvegarder la partie
+function saveGame() {
+    if(confirm('Etes vous sûr de vouloir sauvegarder la partie ?')) {
+
+        var saveData = {
+        dollarCount: dollarCount,
+        unCount: unCount,
+        deuxCount: deuxCount,
+        troisCount: troisCount,
+        quatreCount: quatreCount,
+        unRate: unRate,
+        deuxRate: deuxRate,
+        troisRate: troisRate,
+        quatreRate: quatreRate,
+        unCost: unCost,
+        deuxCost: deuxCost,
+        troisCost: troisCost,
+        quatreCost: quatreCost,
+        dollarRate: dollarRate,
+        unLevel: unLevel,
+        deuxLevel: deuxLevel,
+        troisLevel: troisLevel,
+        quatreLevel: quatreLevel
+    };
+
+    localStorage.setItem('saveData', JSON.stringify(saveData));
+    alert('Partie sauvegardée avec succès!');
+    }
+}
+
+// Fonction pour charger la partie
+function loadGame() {
+    if (confirm("Etes vous sûr de vouloir charger la partie ?")) {
+        var savedData = localStorage.getItem('saveData');
+
+    if (savedData) {
+        savedData = JSON.parse(savedData);
+
+        dollarCount = savedData.dollarCount;
+        unCount = savedData.unCount;
+        deuxCount = savedData.deuxCount;
+        troisCount = savedData.troisCount;
+        quatreCount = savedData.quatreCount;
+        unRate = savedData.unRate;
+        deuxRate = savedData.deuxRate;
+        troisRate = savedData.troisRate;
+        quatreRate = savedData.quatreRate;
+        unCost = savedData.unCost;
+        deuxCost = savedData.deuxCost;
+        troisCost = savedData.troisCost;
+        quatreCost = savedData.quatreCost;
+        dollarRate = savedData.dollarRate;
+        unLevel = savedData.unLevel;
+        deuxLevel = savedData.deuxLevel;
+        troisLevel = savedData.troisLevel;
+        quatreLevel = savedData.quatreLevel;
+
+        // Mettez à jour l'affichage avec les données chargées
+        updatedollarCount();
+        updatedollarRate();
+        updateunCost();
+        updatedeuxCost();
+        updatetroisCost();
+        updatequatreCost();
+        updateunCount();
+        updatedeuxCount();
+        updatetroisCount();
+        updatequatreCount();
+        updateunLevel();
+        updatedeuxLevel();
+        updatetroisLevel();
+        updatequatreLevel();
+
+        verifydeuxLevel();
+        verifytroisLevel();
+        verifyquatreLevel();
+
+        alert('Partie chargée avec succès!');
+    } else {
+        alert('Aucune sauvegarde trouvée.');
+    }
+    }
+}
+
+const letters = ['k', 'M', 'B', 'T', 'Q', 'Qa', 'S', 'Sp', 'O', 'N', 'D', 'Ud', 'Dd', 'Td', 'Qd', 'QaD', 'Sd', 'SpD', 'Od', 'Nd', 'V', 'Uv', 'Dv', 'Tv', 'Qv', 'QaV', 'Sv', 'SpV', 'Ov', 'Nv', 'T', 'Ut', 'Dt', 'Tt', 'Qt', 'QaT', 'St', 'SpT', 'Ot', 'Nt', 'Qd', 'QaD', 'Sd', 'SpD', 'Od', 'Nd', 'Vg', 'UvG', 'DvG', 'TvG', 'QvG', 'QaVG', 'SvG', 'SpVG', 'OvG', 'NvG', 'Tg', 'UtG', 'DtG', 'TtG', 'QtG', 'QaTG', 'StG', 'SpTG', 'OtG', 'NtG', 'Qt', 'QaD', 'Sd', 'SpD', 'Od', 'Nd', 'Qa', 'Qi', 'Se', 'SPe', 'O', 'No'];
+
+
+
+
+function formatNumber(num) {
+    if (num < 1000) {
+        return num;
+    } else {
+        let exp = Math.floor(Math.log10(num) / 3);
+        let letterIndex = exp - 1;
+
+        // Vérifie si la liste de lettres est terminée
+        if (letterIndex >= letters.length) {
+            letterIndex = letters.length - 1; // Utilise la dernière lettre de la liste
+        }
+
+        return (num / Math.pow(10, exp * 3)).toFixed(1) + letters[letterIndex];
+    }
+}
+
+function checkAllBonusesPurchased() {
+    if (unLevel < 2 && deuxLevel < 2 && troisLevel < 2 && quatreLevel < 2) {
+        // Tous les bonus sont achetés, rediriger vers la nouvelle page
+        alert('Vous devez acheter tous les bonus pour acceder a la zone 2');
+    }else{
+        saveGame();
+        window.location.href = 'zone2.html?zone1Unlocked=true';
+    }
+}
+
+
+            function verifydeuxLevel() {
+                if (unLevel < 10) {
+                    document.getElementById('buy50btn').disabled = true
+                } else {
+                    document.getElementById('buy50btn').disabled = false;
+                }
+            }
+
+
+            function verifytroisLevel() {
+                if (deuxLevel < 10) {
+                    document.getElementById('buy75btn').disabled = true;
+                } else {
+                    document.getElementById('buy75btn').disabled = false;
+                }
+            }
+
+            function verifyquatreLevel() {
+                if (troisLevel < 10) {
+                    document.getElementById('buy100btn').disabled = true;
+                } else {
+                    document.getElementById('buy100btn').disabled = false;
+                }
+            }
+
+            var dollarCount = 0;
+
+
+            var unCount = 0;
+            var deuxCount = 0;
+            var troisCount = 0;
+            var quatreCount = 0;
+
+
+            var unRate = 1;
+            var deuxRate = 2;
+            var troisRate = 5;
+            var quatreRate = 10;
+
+
+            var unCost = 100;
+            var deuxCost = 500;
+            var troisCost = 200e3;
+            var quatreCost = 500e3;
+
+
+            var dollarRate = 0;
+
+
+            var unLevel = 1;
+            var deuxLevel = 1;
+            var troisLevel = 1;
+            var quatreLevel = 1;
+
+            function addCookie() {
+                dollarCount++;
+                updatedollarCount();
+            }
+
+            function updatedollarCount() {
+                document.getElementById('dollarCount').innerText = 'Argent: ' + formatNumber(dollarCount) + '$';
+            }
+
+            function updatedollarRate() {
+                document.getElementById('dollarRate').innerText = 'Debit: ' + formatNumber(dollarRate.toFixed(1)) + ' $/s';
+            }
+
+            //prix des bonus
+            function updateunCost() {
+                document.getElementById('unCost').innerText = formatNumber(unCost);
+            }
+
+            function updatedeuxCost() {
+                document.getElementById('deuxCost').innerText = formatNumber(deuxCost);
+            }
+
+            function updatetroisCost() {
+                document.getElementById('troisCost').innerText = formatNumber(troisCost);
+            }
+
+            function updatequatreCost() {
+                document.getElementById('quatreCost').innerText = formatNumber(quatreCost);
+            }
+
+            //compteurs des bonus
+            function updateunCount() {
+                document.getElementById('unCount').innerText = formatNumber(unCount);
+            }
+
+            function updatedeuxCount() {
+                document.getElementById('deuxCount').innerText = formatNumber(deuxCount);
+            }
+
+            function updatetroisCount() {
+                document.getElementById('troisCount').innerText = formatNumber(troisCount);
+            }
+
+            function updatequatreCount() {
+                document.getElementById('quatreCount').innerText = formatNumber(quatreCount);
+            }
+
+            //level des produits
+
+            function updateunLevel() {
+                document.getElementById('unLevel').innerText = unLevel;
+            }
+
+            function updatedeuxLevel() {
+                document.getElementById('deuxLevel').innerText = deuxLevel;
+            }
+
+            function updatetroisLevel() {
+                document.getElementById('troisLevel').innerText = troisLevel;
+            }
+
+            function updatequatreLevel() {
+                document.getElementById('quatreLevel').innerText = quatreLevel;
+            }
+
+
+            function buy25() {
+                if (dollarCount >= unCost) {
+                    dollarCount -= unCost;
+                    unCount++;
+                    unLevel++;
+                    unRate *= 1; // Modifier ici pour ajuster le multiplicateur
+                    unCost = Math.ceil(unCost + 30);
+                    updateunCost();
+                    updatedollarCount();
+                    updatedollarRate();
+                    updateunCount();
+                    updateunLevel();
+                } else {
+                    alert("Pas assez de dollars pour acheter une 25 cl !");
+                }
+            }
+
+            function buy50() {
+                if (dollarCount >= deuxCost) {
+                    dollarCount -= deuxCost;
+                    deuxCount++;
+                    deuxLevel++;
+                    deuxRate *= 1.10; // Modifier ici pour ajuster le multiplicateur
+                    deuxCost = Math.ceil(deuxCost + 30);
+                    updatedeuxCost();
+                    updatedollarCount();
+                    updatedollarRate();
+                    updatedeuxCount();
+                    updatedeuxLevel();
+                } else {
+                    alert("Pas assez de dollars pour acheter une 50 cl !");
+                }
+            }
+
+
+            function buy75() {
+                if (dollarCount >= troisCost) {
+                    dollarCount -= troisCost;
+                    troisCount++;
+                    troisLevel++;
+                    troisRate *= 1.11; // Modifier ici pour ajuster le multiplicateur
+                    troisCost = Math.ceil(troisCost + 30);
+                    updatetroisCost();
+                    updatedollarCount();
+                    updatedollarRate();
+                    updatetroisCount();
+                    updatetroisLevel();
+                } else {
+                    alert("Pas assez de dollars pour acheter une 75 cl !");
+                }
+            }
+
+            function buy100() {
+                if (dollarCount >= quatreCost) {
+                    dollarCount -= quatreCost;
+                    quatreCount++;
+                    quatreLevel++;
+                    quatreRate *= 1.12; // Modifier ici pour ajuster le multiplicateur
+                    quatreCost = Math.ceil(quatreCost + 30);
+                    updatequatreCost();
+                    updatedollarCount();
+                    updatedollarRate();
+                    updatequatreCount();
+                    updatequatreLevel();
+                } else {
+                    alert("Pas assez de dollars pour acheter une 1 l !");
+                }
+            }
+
+
+
+            function generateCookies() {
+                dollarRate = unCount * unRate + deuxCount * deuxRate + troisCount * troisRate + quatreCount * quatreRate;
+                dollarCount += dollarRate;
+
+                updatedollarCount();
+                updatedollarRate();
+            }
+
+            // Générer automatiquement des cookies chaque seconde
+            setInterval(generateCookies, 1000);
+            setInterval(verifydeuxLevel, 1000);
+            setInterval(verifytroisLevel, 1000);
+            setInterval(verifyquatreLevel, 1000);
+        </script>
+
+</body>
+
+</html>

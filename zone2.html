@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vodka Simulator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+
+    <style>
+        body {
+            text-align: center;
+            padding: 50px;
+            font-family: 'Arial', sans-serif;
+            background-color: #C48A47;
+        }
+
+        #game-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #cookieButton {
+            font-size: 20px;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        #cookieButton img {
+            width: 220px;
+            /* Ajustez la taille de l'image selon vos besoins */
+        }
+
+        #bonus-container {
+            flex-grow: 1;
+            margin-right: 20px;
+            text-align: left;
+        }
+
+        .bonus-button {
+            font-size: 16px;
+            padding: 5px 10px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        #bonus-info {
+            margin-top: 20px;
+        }
+
+        #bonus-info table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        #bonus-info th,
+        #bonus-info td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+
+            /* Styles for small screens (e.g., smartphones) */
+            .container {
+                padding: 0;
+            }
+
+            .col-md-8 {
+                max-width: 100%;
+            }
+
+            .col-lg-4 {
+                max-width: 100%;
+            }
+
+            .modal-xl {
+                max-width: 100%;
+            }
+
+            .modal-content {
+                margin: 0;
+                max-width: 100%;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <button onclick="loadGame2()">Chargé la partie</button>
+        <br>
+        <button onclick="saveGame2()">Sauvegarder la partie</button>
+    </div>
+
+    <h1>Vodka Simulator</h1>
+
+    <h2>Zone 2</h2>
+
+    <div id="game-container text-center">
+        <div id="bonus-container">
+
+        </div>
+        <div>
+            <p id="dollarCount">Argent: 0$</p>
+            <p id="dollarRate">Debit: 0 $/s</p>
+            <button id="cookieButton" onclick="addCookie()"><img src="vodka.webp" alt="Bouteille"></button>
+            <br>
+            <a style="background-color: transparent;
+            border-color: white;" href="#" data-bs-toggle="modal" data-bs-target="#report-modal"
+                class="btn btn-primary mb-2">Bonus et Améliorations</a>
+        </div>
+        <h2>Toutes les zones débloquées :</h2>
+        <a class="btn btn-success" href="index.html">Zone 1</a>
+        <h1><i class="bi bi-arrow-down bi-2x"></i></h1>
+        <a class="btn btn-success" href="zone2.html?zone1Unlocked=true">Zone 2</a>
+    </div>
+
+
+    <div class="modal fade" id="report-modal" tabindex="-1" role="dialog" aria-labelledby="report-modal-label"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-light">
+                <div class="modal-header">
+                    <h5 class="modal-title">Bonus et Améliorations</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-light text-center">
+
+                    <h2>Informations sur les bonus</h2>
+                    <table class="table text-light">
+                        <thead>
+                            <th>25 cl</th>
+                            <th>50 cl</th>
+                            <th>75 cl</th>
+                            <th>1 l</th>
+                        </thead>
+                        <tbody>
+                            <td id="unCount">0</td>
+                            <td id="deuxCount">0</td>
+                            <td id="troisCount">0</td>
+                            <td id="quatreCount">0</td>
+                        </tbody>
+                    </table>
+                    <br>
+                    <table class="table text-light">
+                        <thead>
+                            <th>1.25 cl</th>
+                            <th>1.50 cl</th>
+                            <th>1.75 cl</th>
+                            <th>2 l</th>
+                        </thead>
+                        <tbody>
+                            <td id="cinqCount">0</td>
+                            <td id="sixCount">0</td>
+                            <td id="septCount">0</td>
+                            <td id="huitCount">0</td>
+                        </tbody>
+                    </table>
+
+                    <h3>Toutes les bouteilles :</h3>
+                    <button class="btn btn-secondary bonus-button" onclick="buy25()">
+                        <h3>Acheter une bouteille de 25 cl: (level:
+                            <span id="unLevel">1</span>) (coûte <span id="unCost">100</span> $)
+                        </h3>
+                    </button>
+                    <h1>Niveau 10 requis</h1>
+                    <h1><i class="bi bi-arrow-down bi-2x"></i></h1>
+                    <button class="btn btn-secondary bonus-button" id="buy50btn" onclick="buy50()">
+                        <h3>Acheter une bouteille de 50
+                            cl (level: <span id="deuxLevel">1</span>) (coûte <span id="deuxCost">500</span> $)</h3>
+                    </button>
+                    <h1>Niveau 10 requis</h1>
+                    <h1><i class="bi bi-arrow-down bi-2x"></i></h1>
+                    <button class="btn btn-secondary bonus-button" id="buy75btn" onclick="buy75()">
+                        <h3>Acheter une bouteille de 75 cl (level:
+                            <span id="troisLevel">1</span>) (coûte <span id="troisCost">200k</span> $)
+                    </button>
+                    <h1>Niveau 10 requis</h1>
+                    <h1><i class="bi bi-arrow-down bi-2x"></i></h1>
+                    <button class="btn btn-secondary bonus-button" id="buy100btn" onclick="buy100()">
+                        <h3>Acheter une bouteille de 1 l (level: <span id="quatreLevel">1</span>) (coûte <span
+                                id="quatreCost">500k</span> $)</h3>
+                    </button>
+                    <h1>Niveau 10 requis</h1>
+                    <h1><i class="bi bi-arrow-down bi-2x"></i></h1>
+                    <button class="btn btn-secondary bonus-button" id="buy125btn" onclick="buy125()">
+                        <h3>Acheter une bouteille de 1.25 l (level:
+                            <span id="cinqLevel">1</span>) (coûte <span id="cinqCost">1M</span> $)
+                    </button>
+                    <h1>Niveau 10 requis</h1>
+                    <h1><i class="bi bi-arrow-down bi-2x"></i></h1>
+                    <button class="btn btn-secondary bonus-button" id="buy150btn" onclick="buy150()">
+                        <h3>Acheter une bouteille de 1.50 l (level:
+                            <span id="sixLevel">1</span>) (coûte <span id="sixCost">50M</span> $)
+                    </button>
+                    <h1>Niveau 10 requis</h1>
+                    <h1><i class="bi bi-arrow-down bi-2x"></i></h1>
+                    <button class="btn btn-secondary bonus-button" id="buy175btn" onclick="buy175()">
+                        <h3>Acheter une bouteille de 1.75 l (level:
+                            <span id="septLevel">1</span>) (coûte <span id="septCost">150M</span> $)
+                    </button>
+                    <h1>Niveau 10 requis</h1>
+                    <h1><i class="bi bi-arrow-down bi-2x"></i></h1>
+                    <button class="btn btn-secondary bonus-button" id="buy200btn" onclick="buy200()">
+                        <h3>Acheter une bouteille de 2 l (level:
+                            <span id="huitLevel">1</span>) (coûte <span id="huitCost">230M</span> $)
+                    </button>
+                    <h1 class="text-success border">Prochaine zone</h1>
+                    <h2>Achetez tous les bonus pour y acceder</h2>
+                    <h1><i class="bi bi-arrow-down bi-2x"></i></h1>
+                    <button class="btn btn-success" onclick="checkAllBonusesPurchased()" id="zonedeux">
+                        <h1>Bientôt disponible !</h1></a>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <script>
+
+            window.onload = function () {
+                // Récupérer les paramètres de l'URL
+                const urlParams = new URLSearchParams(window.location.search);
+
+                // Vérifier si zone1Unlocked est présent dans les paramètres et s'il est égal à true
+                if (urlParams.has('zone1Unlocked') && urlParams.get('zone1Unlocked') === 'true') {
+                    // Laisser l'utilisateur accéder à la Zone 2
+                    alert('Bienvenue dans la Zone 2!');
+                } else {
+                    // Rediriger vers la page de la Zone 1 si la Zone 1 n'est pas débloquée
+                    alert('Vous devez débloquer tout les bonus sur la zone 1 pour débloquer la zone 2');
+                    window.location.href = 'index.html';
+                }
+            };
+
+
+
+            // Fonction pour sauvegarder la partie
+            function saveGame2() {
+                if (confirm("Etes vous sûr de vouloir de sauvegarder la partie ?")) {
+                    var saveData2 = {
+                        dollarCount: dollarCount,
+                        unCount: unCount,
+                        deuxCount: deuxCount,
+                        troisCount: troisCount,
+                        quatreCount: quatreCount,
+                        cinqCount: cinqCount,
+                        sixCount: sixCount,
+                        septCount: septCount,
+                        huitCount: huitCount,
+                        unRate: unRate,
+                        deuxRate: deuxRate,
+                        troisRate: troisRate,
+                        quatreRate: quatreRate,
+                        cinqRate: cinqRate,
+                        sixRate: sixRate,
+                        septRate: septRate,
+                        huitRate: huitRate,
+                        unCost: unCost,
+                        deuxCost: deuxCost,
+                        troisCost: troisCost,
+                        quatreCost: quatreCost,
+                        cinqCost: cinqCost,
+                        sixCost: sixCost,
+                        septCost: septCost,
+                        huitCost: huitCost,
+                        dollarRate: dollarRate,
+                        unLevel: unLevel,
+                        deuxLevel: deuxLevel,
+                        troisLevel: troisLevel,
+                        quatreLevel: quatreLevel,
+                        cinqLevel: cinqLevel,
+                        sixLevel: sixLevel,
+                        septLevel: septLevel,
+                        huitLevel: huitLevel
+                    };
+
+                    localStorage.setItem('saveData2', JSON.stringify(saveData2));
+                    alert('Partie sauvegardée avec succès!');
+                }
+            }
+
+            // Fonction pour charger la partie
+            function loadGame2() {
+                if (confirm('Etes vous sûr de vouloir chargé la partie ?')) {
+                    var savedData = localStorage.getItem('saveData2');
+
+                    if (savedData) {
+                        savedData2 = JSON.parse(savedData);
+
+                        dollarCount = savedData2.dollarCount;
+                        unCount = savedData2.unCount;
+                        deuxCount = savedData2.deuxCount;
+                        troisCount = savedData2.troisCount;
+                        quatreCount = savedData2.quatreCount;
+                        cinqCount = savedData2.cinqCount;
+                        sixCount = savedData2.sixCount;
+                        septCount = savedData2.septCount
+                        huitCount = savedData2.huitCount
+                        unRate = savedData2.unRate;
+                        deuxRate = savedData2.deuxRate;
+                        troisRate = savedData2.troisRate;
+                        quatreRate = savedData2.quatreRate;
+                        cinqRate = savedData2.cinqRate;
+                        sixRate = savedData2.sixRate;
+                        septRate = savedData2.septRate;
+                        huitRate = savedData2.huitRate;
+                        unCost = savedData2.unCost;
+                        deuxCost = savedData2.deuxCost;
+                        troisCost = savedData2.troisCost;
+                        quatreCost = savedData2.quatreCost;
+                        cinqCost = savedData2.cinqCost;
+                        sixCost = savedData2.sixCost;
+                        septCost = savedData2.septCost;
+                        huitCost = savedData2.huitCost;
+                        dollarRate = savedData2.dollarRate;
+                        unLevel = savedData2.unLevel;
+                        deuxLevel = savedData2.deuxLevel;
+                        troisLevel = savedData2.troisLevel;
+                        quatreLevel = savedData2.quatreLevel;
+                        cinqLevel = savedData2.cinqLevel;
+                        sixLevel = savedData2.sixLevel;
+                        septLevel = savedData2.septLevel;
+                        huitLevel = savedData2.huitLevel;
+
+                        // Mettez à jour l'affichage avec les données chargées
+                        updatedollarCount();
+                        updatedollarRate();
+
+                        updateunCost();
+                        updatedeuxCost();
+                        updatetroisCost();
+                        updatequatreCost();
+                        updatecinqCost();
+                        updatesixCost();
+                        updateseptCost();
+                        updatehuitCost();
+
+                        updateunCount();
+                        updatedeuxCount();
+                        updatetroisCount();
+                        updatequatreCount();
+                        updatecinqCount();
+                        updatesixCount();
+                        updateseptCount();
+                        updatehuitCount();
+
+                        updateunLevel();
+                        updatedeuxLevel();
+                        updatetroisLevel();
+                        updatequatreLevel();
+                        updatecinqLevel();
+                        updatesixLevel();
+                        updateseptLevel();
+                        updatehuitLevel();
+
+                        verifydeuxLevel();
+                        verifytroisLevel();
+                        verifyquatreLevel();
+                        verifycinqLevel();
+                        verifysixLevel();
+                        verifyseptLevel();
+                        verifyhuitLevel();
+
+                        alert('Partie chargée avec succès!');
+                    } else {
+                        alert('Aucune sauvegarde trouvée.');
+                    }
+                }
+            }
+
+            const letters = ['k', 'M', 'B', 'T', 'Q', 'Qa', 'S', 'Sp', 'O', 'N', 'D', 'Ud', 'Dd', 'Td', 'Qd', 'QaD', 'Sd', 'SpD', 'Od', 'Nd', 'V', 'Uv', 'Dv', 'Tv', 'Qv', 'QaV', 'Sv', 'SpV', 'Ov', 'Nv', 'T', 'Ut', 'Dt', 'Tt', 'Qt', 'QaT', 'St', 'SpT', 'Ot', 'Nt', 'Qd', 'QaD', 'Sd', 'SpD', 'Od', 'Nd', 'Vg', 'UvG', 'DvG', 'TvG', 'QvG', 'QaVG', 'SvG', 'SpVG', 'OvG', 'NvG', 'Tg', 'UtG', 'DtG', 'TtG', 'QtG', 'QaTG', 'StG', 'SpTG', 'OtG', 'NtG', 'Qt', 'QaD', 'Sd', 'SpD', 'Od', 'Nd', 'Qa', 'Qi', 'Se', 'SPe', 'O', 'No'];
+
+
+
+
+            function formatNumber(num) {
+                if (num < 1000) {
+                    return num;
+                } else {
+                    let exp = Math.floor(Math.log10(num) / 3);
+                    let letterIndex = exp - 1;
+
+                    // Vérifie si la liste de lettres est terminée
+                    if (letterIndex >= letters.length) {
+                        letterIndex = letters.length - 1; // Utilise la dernière lettre de la liste
+                    }
+
+                    return (num / Math.pow(10, exp * 3)).toFixed(1) + letters[letterIndex];
+                }
+            }
+
+            function checkAllBonusesPurchased() {
+                alert('Bientôt disponible, la zone est en cours de développement');
+            }
+
+
+            function verifydeuxLevel() {
+                if (unLevel < 10) {
+                    document.getElementById('buy50btn').disabled = true
+                } else {
+                    document.getElementById('buy50btn').disabled = false;
+                }
+            }
+
+
+            function verifytroisLevel() {
+                if (deuxLevel < 10) {
+                    document.getElementById('buy75btn').disabled = true;
+                } else {
+                    document.getElementById('buy75btn').disabled = false;
+                }
+            }
+
+            function verifyquatreLevel() {
+                if (troisLevel < 10) {
+                    document.getElementById('buy100btn').disabled = true;
+                } else {
+                    document.getElementById('buy100btn').disabled = false;
+                }
+            }
+
+            function verifycinqLevel() {
+                if (quatreLevel < 10) {
+                    document.getElementById('buy125btn').disabled = true;
+                } else {
+                    document.getElementById('buy125btn').disabled = false;
+                }
+            }
+
+            function verifysixLevel() {
+                if (cinqLevel < 10) {
+                    document.getElementById('buy150btn').disabled = true;
+                } else {
+                    document.getElementById('buy150btn').disabled = false;
+                }
+            }
+
+            function verifyseptLevel() {
+                if (sixLevel < 10) {
+                    document.getElementById('buy175btn').disabled = true;
+                } else {
+                    document.getElementById('buy175btn').disabled = false;
+                }
+            }
+
+
+            function verifyhuitLevel() {
+                if (septLevel < 10) {
+                    document.getElementById('buy200btn').disabled = true;
+                } else {
+                    document.getElementById('buy200btn').disabled = false;
+                }
+            }
+
+
+
+            var dollarCount = 0;
+
+
+            var unCount = 0;
+            var deuxCount = 0;
+            var troisCount = 0;
+            var quatreCount = 0;
+            var cinqCount = 0;
+            var sixCount = 0;
+            var septCount = 0;
+            var huitCount = 0;
+
+            var unRate = 1;
+            var deuxRate = 2;
+            var troisRate = 5;
+            var quatreRate = 10;
+            var cinqRate = 11;
+            var sixRate = 12;
+            var septRate = 15;
+            var huitRate = 20;
+
+
+            var unCost = 100;
+            var deuxCost = 500;
+            var troisCost = 200e3;
+            var quatreCost = 500e3;
+            var cinqCost = 1e6;
+            var sixCost = 50e6;
+            var septCost = 150e6;
+            var huitCost = 230e6;
+
+
+            var dollarRate = 0;
+
+
+            var unLevel = 1;
+            var deuxLevel = 1;
+            var troisLevel = 1;
+            var quatreLevel = 1;
+            var cinqLevel = 1;
+            var sixLevel = 1;
+            var septLevel = 1;
+            var huitLevel = 1;
+
+            function addCookie() {
+                dollarCount++;
+                updatedollarCount();
+            }
+
+            function updatedollarCount() {
+                document.getElementById('dollarCount').innerText = 'Argent: ' + formatNumber(dollarCount) + '$';
+            }
+
+            function updatedollarRate() {
+                document.getElementById('dollarRate').innerText = 'Debit: ' + formatNumber(dollarRate.toFixed(1)) + ' $/s';
+            }
+
+            //prix des bonus
+            function updateunCost() {
+                document.getElementById('unCost').innerText = formatNumber(unCost);
+            }
+
+            function updatedeuxCost() {
+                document.getElementById('deuxCost').innerText = formatNumber(deuxCost);
+            }
+
+            function updatetroisCost() {
+                document.getElementById('troisCost').innerText = formatNumber(troisCost);
+            }
+
+            function updatequatreCost() {
+                document.getElementById('quatreCost').innerText = formatNumber(quatreCost);
+            }
+
+            function updatecinqCost() {
+                document.getElementById('cinqCost').innerText = formatNumber(cinqCost);
+            }
+
+            function updatesixCost() {
+                document.getElementById('sixCost').innerText = formatNumber(sixCost);
+            }
+
+            function updateseptCost() {
+                document.getElementById('septCost').innerText = formatNumber(septCost);
+            }
+
+            function updatehuitCost() {
+                document.getElementById('huitCost').innerText = formatNumber(huitCost);
+            }
+
+            //compteurs des bonus
+            function updateunCount() {
+                document.getElementById('unCount').innerText = formatNumber(unCount);
+            }
+
+            function updatedeuxCount() {
+                document.getElementById('deuxCount').innerText = formatNumber(deuxCount);
+            }
+
+            function updatetroisCount() {
+                document.getElementById('troisCount').innerText = formatNumber(troisCount);
+            }
+
+            function updatequatreCount() {
+                document.getElementById('quatreCount').innerText = formatNumber(quatreCount);
+            }
+
+            function updatecinqCount() {
+                document.getElementById('cinqCount').innerText = formatNumber(cinqCount);
+            }
+
+            function updatesixCount() {
+                document.getElementById('sixCount').innerText = formatNumber(sixCount);
+            }
+
+            function updateseptCount() {
+                document.getElementById('septCount').innerText = formatNumber(septCount);
+            }
+
+            function updatehuitCount() {
+                document.getElementById('huitCount').innerText = formatNumber(huitCount);
+            }
+
+            //level des produits
+
+            function updateunLevel() {
+                document.getElementById('unLevel').innerText = unLevel;
+            }
+
+            function updatedeuxLevel() {
+                document.getElementById('deuxLevel').innerText = deuxLevel;
+            }
+
+            function updatetroisLevel() {
+                document.getElementById('troisLevel').innerText = troisLevel;
+            }
+
+            function updatequatreLevel() {
+                document.getElementById('quatreLevel').innerText = quatreLevel;
+            }
+
+            function updatecinqLevel() {
+                document.getElementById('cinqLevel').innerText = cinqLevel;
+            }
+
+            function updatesixLevel() {
+                document.getElementById('sixLevel').innerText = sixLevel;
+            }
+
+            function updateseptLevel() {
+                document.getElementById('septLevel').innerText = septLevel;
+            }
+
+            function updatehuitLevel() {
+                document.getElementById('huitLevel').innerText = huitLevel;
+            }
+
+
+            function buy25() {
+                if (dollarCount >= unCost) {
+                    dollarCount -= unCost;
+                    unCount++;
+                    unLevel++;
+                    unRate *= 1; // Modifier ici pour ajuster le multiplicateur
+                    unCost = Math.ceil(unCost + 30);
+                    updateunCost();
+                    updatedollarCount();
+                    updatedollarRate();
+                    updateunCount();
+                    updateunLevel();
+                } else {
+                    alert("Pas assez de dollars pour acheter une 25 cl !");
+                }
+            }
+
+            function buy50() {
+                if (dollarCount >= deuxCost) {
+                    dollarCount -= deuxCost;
+                    deuxCount++;
+                    deuxLevel++;
+                    deuxRate *= 1.10; // Modifier ici pour ajuster le multiplicateur
+                    deuxCost = Math.ceil(deuxCost + 30);
+                    updatedeuxCost();
+                    updatedollarCount();
+                    updatedollarRate();
+                    updatedeuxCount();
+                    updatedeuxLevel();
+                } else {
+                    alert("Pas assez de dollars pour acheter une 50 cl !");
+                }
+            }
+
+
+            function buy75() {
+                if (dollarCount >= troisCost) {
+                    dollarCount -= troisCost;
+                    troisCount++;
+                    troisLevel++;
+                    troisRate *= 1.11; // Modifier ici pour ajuster le multiplicateur
+                    troisCost = Math.ceil(troisCost + 30);
+                    updatetroisCost();
+                    updatedollarCount();
+                    updatedollarRate();
+                    updatetroisCount();
+                    updatetroisLevel();
+                } else {
+                    alert("Pas assez de dollars pour acheter une 75 cl !");
+                }
+            }
+
+            function buy100() {
+                if (dollarCount >= quatreCost) {
+                    dollarCount -= quatreCost;
+                    quatreCount++;
+                    quatreLevel++;
+                    quatreRate *= 1.12; // Modifier ici pour ajuster le multiplicateur
+                    quatreCost = Math.ceil(quatreCost + 30);
+                    updatequatreCost();
+                    updatedollarCount();
+                    updatedollarRate();
+                    updatequatreCount();
+                    updatequatreLevel();
+                } else {
+                    alert("Pas assez de dollars pour acheter une 1 l !");
+                }
+            }
+
+            function buy125() {
+                if (dollarCount >= cinqCost) {
+                    dollarCount -= cinqCost;
+                    cinqCount++;
+                    cinqLevel++;
+                    cinqRate *= 1.12; // Modifier ici pour ajuster le multiplicateur
+                    cinqCost = Math.ceil(quatreCost + 30);
+                    updatecinqCost();
+                    updatedollarCount();
+                    updatedollarRate();
+                    updatecinqCount();
+                    updatecinqLevel();
+                } else {
+                    alert("Pas assez de dollars pour acheter une 1.25 l !");
+                }
+            }
+
+            function buy150() {
+                if (dollarCount >= sixCost) {
+                    dollarCount -= sixCost;
+                    sixCount++;
+                    sixLevel++;
+                    sixRate *= 1.12; // Modifier ici pour ajuster le multiplicateur
+                    sixCost = Math.ceil(sixCost + 30);
+                    updatesixCost();
+                    updatedollarCount();
+                    updatedollarRate();
+                    updatesixCount();
+                    updatesixLevel();
+                } else {
+                    alert("Pas assez de dollars pour acheter une 1.50 l !");
+                }
+            }
+
+            function buy175() {
+                if (dollarCount >= septCost) {
+                    dollarCount -= septCost;
+                    septCount++;
+                    septLevel++;
+                    septRate *= 1.12; // Modifier ici pour ajuster le multiplicateur
+                    septCost = Math.ceil(septCost + 30);
+                    updateseptCost();
+                    updatedollarCount();
+                    updatedollarRate();
+                    updateseptCount();
+                    updateseptLevel();
+                } else {
+                    alert("Pas assez de dollars pour acheter une 1.75 l !");
+                }
+            }
+
+            function buy200() {
+                if (dollarCount >= huitCost) {
+                    dollarCount -= huitCost;
+                    huitCount++;
+                    huitLevel++;
+                    huitRate *= 1.12; // Modifier ici pour ajuster le multiplicateur
+                    huitCost = Math.ceil(huitCost + 30);
+                    updatehuitCost();
+                    updatedollarCount();
+                    updatedollarRate();
+                    updatehuitCount();
+                    updatehuitLevel();
+                } else {
+                    alert("Pas assez de dollars pour acheter une 1.25 l !");
+                }
+            }
+
+            function generateCookies() {
+                dollarRate = unCount * unRate + deuxCount * deuxRate + troisCount * troisRate + quatreCount * quatreRate + cinqCount * cinqRate + sixCount * sixRate + septCount * septRate + huitCount * huitRate;
+                dollarCount += dollarRate;
+
+                updatedollarCount();
+                updatedollarRate();
+            }
+
+            // Générer automatiquement des cookies chaque seconde
+            setInterval(generateCookies, 1000);
+            setInterval(verifydeuxLevel, 1000);
+            setInterval(verifytroisLevel, 1000);
+            setInterval(verifyquatreLevel, 1000);
+            setInterval(verifycinqLevel, 1000);
+            setInterval(verifysixLevel, 1000);
+            setInterval(verifyseptLevel, 1000);
+            setInterval(verifyhuitLevel, 1000);
+        </script>
+
+</body>
+
+</html>

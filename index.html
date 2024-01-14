@@ -160,11 +160,11 @@
                 <h1>Niveau 10 requis</h1>
                 <h1><i class="bi bi-arrow-down bi-2x"></i></h1>
             <button class="btn btn-secondary bonus-button" id="buy75btn" onclick="buy75()"><h3>Acheter une bouteille de 75 cl (level:
-                <span id="troisLevel">1</span>) (coûte <span id="troisCost">200k</span> $)</button>
+                <span id="troisLevel">1</span>) (coûte <span id="troisCost">500k</span> $)</button>
                 <h1>Niveau 10 requis</h1>
                 <h1><i class="bi bi-arrow-down bi-2x"></i></h1>
             <button class="btn btn-secondary bonus-button" id="buy100btn" onclick="buy100()"><h3>Acheter une bouteille de 1 l (level: <span
-                    id="quatreLevel">1</span>) (coûte <span id="quatreCost">500k</span> $)</h3></button>
+                    id="quatreLevel">1</span>) (coûte <span id="quatreCost">100M</span> $)</h3></button>
                     <h1 class="text-success border">Prochaine zone</h1>
                     <h2>Achetez tous les bonus pour y acceder</h2>
                     <h1><i class="bi bi-arrow-down bi-2x"></i></h1>
@@ -336,8 +336,8 @@ function checkAllBonusesPurchased() {
 
             var unCost = 100;
             var deuxCost = 500;
-            var troisCost = 200e3;
-            var quatreCost = 500e3;
+            var troisCost = 500e3;
+            var quatreCost = 100e6;
 
 
             var dollarRate = 0;
@@ -420,7 +420,7 @@ function checkAllBonusesPurchased() {
                     unCount++;
                     unLevel++;
                     unRate *= 1; // Modifier ici pour ajuster le multiplicateur
-                    unCost = Math.ceil(unCost + 30);
+                    unCost = Math.ceil(unCost * 1.3);
                     updateunCost();
                     updatedollarCount();
                     updatedollarRate();
@@ -437,7 +437,7 @@ function checkAllBonusesPurchased() {
                     deuxCount++;
                     deuxLevel++;
                     deuxRate *= 1.10; // Modifier ici pour ajuster le multiplicateur
-                    deuxCost = Math.ceil(deuxCost + 30);
+                    deuxCost = Math.ceil(deuxCost + 1.3);
                     updatedeuxCost();
                     updatedollarCount();
                     updatedollarRate();
@@ -455,7 +455,7 @@ function checkAllBonusesPurchased() {
                     troisCount++;
                     troisLevel++;
                     troisRate *= 1.11; // Modifier ici pour ajuster le multiplicateur
-                    troisCost = Math.ceil(troisCost + 30);
+                    troisCost = Math.ceil(troisCost + 1.3);
                     updatetroisCost();
                     updatedollarCount();
                     updatedollarRate();
@@ -472,7 +472,7 @@ function checkAllBonusesPurchased() {
                     quatreCount++;
                     quatreLevel++;
                     quatreRate *= 1.12; // Modifier ici pour ajuster le multiplicateur
-                    quatreCost = Math.ceil(quatreCost + 30);
+                    quatreCost = Math.ceil(quatreCost + 1.3);
                     updatequatreCost();
                     updatedollarCount();
                     updatedollarRate();
